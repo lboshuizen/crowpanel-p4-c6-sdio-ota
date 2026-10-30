@@ -1,0 +1,10 @@
+# Overlay for the JCZN JC4880P443C_I_W (ESP32-P4 host + ESP32-C6 co-processor over SDIO).
+# Layered on top of sdkconfig.defaults, which stays the CrowPanel 7" reference. Build with:
+#   idf.py -D SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.defaults.jczn" set-target esp32p4
+#   idf.py build
+# (delete the generated sdkconfig first if you built for the CrowPanel before, otherwise the old value is kept)
+#
+# SDIO CLK/CMD/D0/D1 are the same pins as the CrowPanel; only the C6 reset line differs.
+# GPIO54, confirmed by the factory firmware boot log: "H_SDIO_DRV: Reset slave using GPIO[54]".
+# Polarity is kept active-high as in sdkconfig.defaults; that is an untested assumption on this board.
+CONFIG_ESP_HOSTED_SDIO_GPIO_RESET_SLAVE=54

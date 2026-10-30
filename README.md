@@ -260,6 +260,24 @@ If OTA fails mid-transfer, try these adjustments one at a time:
 
 Rebuild with `idf.py build` after each change.
 
+## Other Boards
+
+The default configuration (`sdkconfig.defaults`) is the CrowPanel 7" reference. A different board that wires the C6 the
+same way but resets it from another GPIO can use an overlay file, layered on top with `SDKCONFIG_DEFAULTS`:
+
+| Board | Overlay | C6 reset | Notes |
+|-------|---------|----------|-------|
+| CrowPanel 7" ESP32-P4 | none (`sdkconfig.defaults`) | GPIO32 | reference design, tested |
+| JCZN JC4880P443C_I_W | `sdkconfig.defaults.jczn` | GPIO54 | pin taken from the factory firmware boot log; reset polarity (active high) not yet tested on this board |
+
+```bash
+rm -f sdkconfig        # a sdkconfig generated for another board would keep its old values
+idf.py -D SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.defaults.jczn" set-target esp32p4
+idf.py build
+```
+
+The `[DIAG]` line printed when `esp_hosted_init` fails shows the reset GPIO the build actually uses.
+
 ## Alternative Flash Paths
 
 If SDIO OTA fails entirely, the C6 can still be flashed through test pads on the PCB. See [HARDWARE.md](HARDWARE.md) for test pad locations and wiring.
